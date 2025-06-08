@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
 
 interface MarkdownRendererProps {
@@ -11,7 +12,7 @@ interface MarkdownRendererProps {
 export function MarkdownRenderer({ content, className }: MarkdownRendererProps) {
   return (
     <div className={cn("whitespace-pre-wrap break-words", className)}>
-      {content}
+      <ReactMarkdown>{content}</ReactMarkdown>
     </div>
   );
 }
