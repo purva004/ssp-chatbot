@@ -10,3 +10,4 @@ uvicorn
 ollama
 pandas
 dateparser
+neo4j
