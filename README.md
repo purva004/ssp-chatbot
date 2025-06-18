@@ -76,5 +76,68 @@ A full-stack chatbot application using RAG (Retrieval-Augmented Generation) with
 
 ---
 
+## Neo4j Graph Database Integration
+This project uses Neo4j as a vector-enabled graph database to store and semantically search vector embeddings using LangChain + Neo4j.
+
+- Step 1: Install Neo4j Desktop
+   - Download Neo4j Desktop: https://neo4j.com/download/
+
+   - Run the installer and complete installation.
+
+   - Launch Neo4j Desktop and sign in (GitHub/Google/Email).
+
+- Step 2: Create a New Project and Database
+   - In Neo4j Desktop, click "New Project" → name it (e.g., VectorBotProject).
+
+   - Inside the project, click "Add" → "Local DBMS".
+
+   - Name your database (e.g., vectorbot), set a password, and click Create.
+
+   - Click Start to launch the database.
+
+- Step 3: Enable Vector Search
+   - Option A: Enable via GUI
+     Go to the database → click "Plugins".
+
+     - Look for plugins like "Vector", "Vector Indexes", or "genAI".
+
+     - Install them if listed.
+
+   - Option B: Manual Configuration (if plugin not available)
+     Go to database settings: ⋮ → Manage → Settings.
+
+     - Edit the neo4j.conf file and add:
+
+       dbms.security.procedures.unrestricted=apoc.*,gds.*,vector.*
+       dbms.security.procedures.allowlist=apoc.*,gds.*,vector.*,genai.*
+       dbms.memory.heap.initial_size=2G
+       dbms.memory.heap.max_size=4G
+       Save the file and restart the database.
+
+- Step 4: Get Connection Details
+   - URI: bolt://localhost:7687
+
+   - Username: neo4j (default)
+
+   - Password: the one you set during creation
+
+- Step 5: Test the Setup
+   - Open the Neo4j browser and run:
+      - RETURN "Neo4j is ready!" AS message;
+        - If the vector plugin is enabled, try:
+          CALL db.index.vector.createNodeIndex('myVectorIndex', 'MyLabel', 'myVectorProperty', 384)
+- Step 6: Connect from Python
+   - Use the official Neo4j Python driver:
+       from neo4j import GraphDatabase
+       uri = "bolt://localhost:7687"
+       username = "neo4j"
+       password = "your_password"
+       driver = GraphDatabase.driver(uri, auth=(username, password))
+       with driver.session() as session:
+           result = session.run("RETURN 'Neo4j connected!' AS msg")
+           print(result.single()["msg"])
+
+
 ## License
 MIT
+
