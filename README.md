@@ -128,14 +128,14 @@ This project uses Neo4j as a vector-enabled graph database to store and semantic
           CALL db.index.vector.createNodeIndex('myVectorIndex', 'MyLabel', 'myVectorProperty', 384)
 - Step 6: Connect from Python
    - Use the official Neo4j Python driver:
-       from neo4j import GraphDatabase
-       uri = "bolt://localhost:7687"
-       username = "neo4j"
-       password = "your_password"
-       driver = GraphDatabase.driver(uri, auth=(username, password))
-       with driver.session() as session:
-           result = session.run("RETURN 'Neo4j connected!' AS msg")
-           print(result.single()["msg"])
+       - from neo4j import GraphDatabase
+       - uri = "bolt://localhost:7687"
+       - username = "neo4j"
+       - password = "your_password"
+       - driver = GraphDatabase.driver(uri, auth=       (username,   password))
+       - with driver.session() as session:
+           - result = session.run("RETURN 'Neo4j connected!' AS msg")
+           - print(result.single()["msg"])
 
 
 ## License

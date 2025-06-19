@@ -23,6 +23,7 @@ NEO4J_URL = "neo4j://127.0.0.1:7687"
 NEO4J_USERNAME = "neo4j"
 NEO4J_PASSWORD = "purva@1234"
 COLLECTION_NAME = "vectorbot"
+LOCAL_MODEL_PATH = "all-MiniLM-L6-v2" 
 
 load_dotenv(".env.local")
 DEFAULT_OLLAMA_MODEL = os.getenv("NEXT_PUBLIC_DEFAULT_MODEL", "Gemma3:1b")
