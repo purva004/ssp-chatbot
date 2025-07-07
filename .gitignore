@@ -4,6 +4,8 @@ __pycache__/
 package-lock.json
 vector.index
 data_store.json
+all-MiniLM-L6-v2
+all-MiniLM-L12-v2
 
 # Python
 __pycache__/
