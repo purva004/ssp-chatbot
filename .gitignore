@@ -4,3 +4,22 @@ __pycache__/
 package-lock.json
 vector.index
 data_store.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Virtual environments and dependencies
+env/
+venv/
+ENV/
+Lib/
+lib/
+site-packages/
+chatbot/Lib/
+chatbot/Lib/site-packages/
+
