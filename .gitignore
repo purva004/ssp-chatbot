@@ -6,6 +6,8 @@ vector.index
 data_store.json
 all-MiniLM-L6-v2
 all-MiniLM-L12-v2
+chatbot/Lib/site-packages/
+chatbot/Lib/site-packages/torch_cpu.dll
 
 # Python
 __pycache__/
