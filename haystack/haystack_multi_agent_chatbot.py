@@ -1,13 +1,12 @@
 import csv
 import threading
 from typing import List, Dict, Any
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from pydantic import BaseModel, ConfigDict
 from neo4j import GraphDatabase
 from haystack.pipelines import Pipeline
 from haystack.nodes.base import BaseComponent
 from haystack.schema import Document
-from sentence_transformers import SentenceTransformer
 import requests
 import os
 
@@ -64,6 +63,25 @@ def parse_csv(path: str) -> List[Dict[str, str]]:
 # -----------------------------
 # MULTI-AGENT: Custom Retriever + Generator
 # -----------------------------
+class OllamaGenerator(BaseComponent):
+    outgoing_edges = 1
+
+    def __init__(self, model=OLLAMA_MODEL):
+        self.model = model
+
+    def run(self, query, documents=None, **kwargs):
+        context = "\n".join([doc.content for doc in documents]) if documents else ""
+        prompt = f"Context:\n{context}\n\nQuestion: {query}"
+        try:
+            response = requests.post(
+                OLLAMA_URL,
+                json={"model": self.model, "prompt": prompt, "stream": False}
+            )
+            result = response.json()
+            return {"answers": [{"answer": result.get("response", "No answer found.")}]}, "output_1"
+        except Exception as e:
+            return {"answers": [{"answer": f"Ollama error: {e}"}]}, "output_1"
+
 class Neo4jRetriever(BaseComponent):
     outgoing_edges = 1
 
@@ -89,24 +107,12 @@ class Neo4jRetriever(BaseComponent):
                 docs.append(Document(content=content))
             return {"documents": docs}, "output_1"
 
-class OllamaGenerator(BaseComponent):
-    outgoing_edges = 1
-
-    def __init__(self, model=OLLAMA_MODEL):
-        self.model = model
-
-    def run(self, query, documents=None, **kwargs):
-        context = "\n".join([doc.content for doc in documents])
-        prompt = f"Context:\n{context}\n\nQuestion: {query}"
-        try:
-            response = requests.post(
-                OLLAMA_URL,
-                json={"model": self.model, "prompt": prompt, "stream": False}
-            )
-            result = response.json()
-            return {"answers": [{"answer": result.get("response", "No answer found.")}]}, "output_1"
-        except Exception as e:
-            return {"answers": [{"answer": f"Ollama error: {e}"}]}, "output_1"
+    def run_batch(self, queries, **kwargs):
+        results = []
+        for query in queries:
+            docs, _ = self.run(query)
+            results.append(docs)
+        return results
 
 # -----------------------------
 # FASTAPI
