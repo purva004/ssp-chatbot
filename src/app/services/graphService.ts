@@ -1,6 +1,6 @@
-export async function askRAG(question: string, model?: string): Promise<string> {
+export async function askGraph(question: string, model?: string): Promise<string> {
   try {
-    const response = await fetch("http://localhost:8000/rag/query", {
+    const response = await fetch("http://localhost:8000/graph/query", {
       method: "POST",
       headers: { 
         "Content-Type": "application/json",
@@ -13,14 +13,14 @@ export async function askRAG(question: string, model?: string): Promise<string> 
     }
 
     const data = await response.json();
-    return data.answer || "No response from RAG chatbot";
+    return data.answer || "No response from Graph chatbot";
   } catch (error) {
-    console.error("RAG Service Error:", error);
-    throw new Error(`Failed to get response from RAG chatbot: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error("Graph Service Error:", error);
+    throw new Error(`Failed to get response from Graph chatbot: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
 
-export async function checkRAGHealth(): Promise<boolean> {
+export async function checkGraphHealth(): Promise<boolean> {
   try {
     const response = await fetch("http://localhost:8000/health", {
       method: "GET",
@@ -30,7 +30,7 @@ export async function checkRAGHealth(): Promise<boolean> {
     });
     return response.ok;
   } catch (error) {
-    console.error("RAG Health Check Error:", error);
+    console.error("Graph Health Check Error:", error);
     return false;
   }
 }

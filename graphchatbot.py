@@ -120,67 +120,10 @@ def doc_to_entry(d):
         f"TimeSlot: {d.get('TimeSlot', '')}. Part of day: {part}."
     )
 
-def filter_logs(docs, query):
-    query = query.lower()
-    filters = {}
 
-    date_match = re.search(r"\b(20\d{2}-\d{2}-\d{2})\b", query)
-    if date_match:
-        filters["RecordDate"] = date_match.group(1)
-
-    time_match = re.search(r"\b(\d{1,2}:\d{2}(?::\d{2})?)\b", query)
-    if time_match:
-        filters["Time"] = time_match.group(1)
-
-    timeslot_match = re.search(r"(\d{1,2}:\d{2})\s*-\s*(\d{1,2}:\d{2})", query)
-    if timeslot_match:
-        filters["TimeSlot"] = f"{timeslot_match.group(1)}-{timeslot_match.group(2)}".replace(" ", "")
-
-    for city in ["pune", "mumbai", "bangalore", "kalwa"]:
-        if city in query:
-            filters["LocationCode"] = city.upper()
-            break
-
-    floor_match = re.search(r"(\d+(?:st|nd|rd|th)\s+floor|ground floor)", query)
-    if floor_match:
-        filters["Floor"] = floor_match.group(1).title()
-
-    for site in ["tech park", "innovation hub", "rnd building", "admin block"]:
-        if site in query:
-            filters["SiteDetails"] = site.title()
-            break
-
-    for day in ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]:
-        if day in query:
-            filters["DayOfWeek"] = day.title()
-            break
-
-    for dtype in ["weekday", "weekend"]:
-        if dtype in query:
-            filters["DayType"] = dtype.title()
-            break
-
-    filtered = []
-    for doc in docs:
-        match = True
-        for k, v in filters.items():
-            if k == "LocationCode":
-                loc = doc.get("LocationCode", "").replace("LOC-IN-", "").upper()
-                if loc != v:
-                    match = False
-                    break
-            elif k == "TimeSlot":
-                slot = doc.get("TimeSlot", "").replace(" ", "").replace("–", "-")
-                if slot.replace(" ", "") != v.replace(" ", ""):
-                    match = False
-                    break
-            else:
-                if str(doc.get(k, "")).lower() != v.lower():
-                    match = False
-                    break
-        if match:
-            filtered.append(doc)
-    return filtered
+@app.get("/health")
+def health_check():
+    return {"status": "healthy", "service": "Graph Chatbot"}
 
 @app.post("/query")
 def query(req: QueryRequest):

@@ -7,6 +7,10 @@ app = FastAPI()
 class Query(BaseModel):
     query: str
 
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy", "service": "CrewAI"}
+
 @app.post("/crewquery")
 async def crew_query_endpoint(query: Query):
     try:

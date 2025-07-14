@@ -1,51 +1,49 @@
-# SSP Chatbot - Multi-Agent Occupancy Data Intelligence System
+# SSP Chatbot - Unified Multi-Agent Intelligence System
 
 ![SSP Chatbot](logobeautify.png)
 
-A sophisticated multi-agent chatbot system built to intelligently analyze occupancy data through natural language queries. This project demonstrates multiple AI architectures including CrewAI, Haystack, and LangChain integrations with Neo4j graph database and vector search capabilities.
+A unified multi-agent chatbot system that intelligently analyzes occupancy data through natural language queries. This project integrates three powerful AI architectures (RAG, Graph, and CrewAI) into a single seamless interface with Neo4j graph database and vector search capabilities.
 
 ## 🚀 Features
 
-- **Multi-Agent Architecture**: Supports CrewAI, Haystack, and custom agents
-- **Vector Database Integration**: Neo4j with semantic search capabilities
-- **RAG (Retrieval-Augmented Generation)**: Intelligent document retrieval and generation
+- **Unified Backend**: Single FastAPI server with multiple AI service endpoints
+- **Three AI Architectures**: RAG (FAISS), Graph (Neo4j), and CrewAI Multi-Agent
+- **Seamless Service Switching**: Toggle between AI services from the same interface
 - **Real-time Chat Interface**: Modern Next.js frontend with TypeScript
 - **Multiple LLM Support**: Ollama integration with various models
-- **Time-based Filtering**: Smart filtering by dates, times, and locations
-- **Responsive Design**: Mobile-first UI with theme support
-- **Multiple Deployment Options**: FastAPI, Streamlit, and hybrid architectures
+- **Smart Query Processing**: Intelligent date/time/location parsing
+- **Responsive Design**: Mobile-first UI with dark/light theme support
+- **Single Port Architecture**: All services unified on port 8000 with different endpoints
 
-## 🏗️ System Architecture
+## 🏗️ Unified System Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────────────┐
-│                              SSP Chatbot System Architecture                            │
+│                                Unified Chatbot System                                   │
 ├─────────────────────────────────────────────────────────────────────────────────────────┤
 │  Frontend Layer                                                                          │
-│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐                    │
-│  │   Next.js UI    │    │  Streamlit UI   │    │  Direct API     │                    │
-│  │   (React/TS)    │    │   (Python)      │    │   Integration   │                    │
-│  └─────────────────┘    └─────────────────┘    └─────────────────┘                    │
+│  ┌─────────────────┐                                                                    │
+│  │   Next.js UI    │                                                                    │
+│  │   (React/TS)    │                                                                    │
+│  └─────────────────┘                                                                    │
 ├─────────────────────────────────────────────────────────────────────────────────────────┤
-│  API Gateway Layer                                                                       │
-│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐                    │
-│  │   FastAPI       │    │   FastAPI       │    │   FastAPI       │                    │
-│  │   (Main)        │    │   (CrewAI)      │    │   (Haystack)    │                    │
-│  └─────────────────┘    └─────────────────┘    └─────────────────┘                    │
-├─────────────────────────────────────────────────────────────────────────────────────────┤
-│  Agent Layer                                                                             │
-│  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐                    │
-│  │  RAG Agent      │    │  CrewAI Agent   │    │  Haystack       │                    │
-│  │  (FAISS+LLM)    │    │  (Multi-Agent)  │    │  Pipeline       │                    │
-│  └─────────────────┘    └─────────────────┘    └─────────────────┘                    │
+│  Backend Layer                                                                           │
+│  ┌─────────────────────────────────────────────────────────────────────────────────┐   │
+│  │  FastAPI (Unified API Server)                                                    │   │
+│  │                                                                                  │   │
+│  │  ┌────────────────────────┐┌─────────────────────┐┌───────────────────────────┐ │   │
+│  │  │   /rag/query           ││ /graph/query       ││ /crewai/query             │ │   │
+│  │  │   (FAISS + Ollama)     ││ (Neo4j + Language) ││ (Multi-Agent)             │ │   │
+│  │  └────────────────────────┘└─────────────────────┘└───────────────────────────┘ │   │
+│  └─────────────────────────────────────────────────────────────────────────────────┘   │
 ├─────────────────────────────────────────────────────────────────────────────────────────┤
 │  LLM Layer                                                                               │
-│  ┌─────────────────────────────────────────────────────────────────────────────────┐  │
-│  │                          Ollama (Local LLM)                                     │  │
-│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ │  │
-│  │  │  Llama3:8b  │ │  Gemma3:1b  │ │  Mistral:7b │ │   Llama2    │ │   Custom    │ │  │
-│  │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘ │  │
-│  └─────────────────────────────────────────────────────────────────────────────────┘  │
+│  ┌─────────────────────────────────────────────────────────────────────────────────┐   │
+│  │                          Ollama (Local LLM)                                     │   │
+│  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ │   │
+│  │  │  Llama3:8b  │ │  Gemma3:1b  │ │  Mistral:7b │ │   Llama2    │ │   Custom    │ │   │
+│  │  └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘ │   │
+│  └─────────────────────────────────────────────────────────────────────────────────┘   │
 ├─────────────────────────────────────────────────────────────────────────────────────────┤
 │  Data Layer                                                                              │
 │  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐                    │
@@ -164,45 +162,35 @@ OLLAMA_URL=http://localhost:11434
 
 ## 🚀 Usage
 
-### Option 1: Main RAG Chatbot (Recommended)
+### Unified System (Recommended)
 
 ```powershell
-# Terminal 1: Start backend
-uvicorn rag_chatbot:app --reload
+# Terminal 1: Start unified backend
+python -m uvicorn backend:app --host 0.0.0.0 --port 8000 --reload
 
-# Terminal 2: Start frontend
+# Terminal 2: Start Next.js frontend
 npm run dev
 ```
 
 **Access**: http://localhost:3000
 
-### Option 2: CrewAI Multi-Agent System
+### Service Switching
 
-```powershell
-cd crewAI
-python start_chatbot.py
-```
+1. **Select AI Service**: Use the dropdown in the header to choose between:
+   - **RAG Chatbot** - FAISS vector search with Ollama
+   - **Graph Chatbot** - Neo4j graph database with LangChain
+   - **CrewAI Multi-Agent** - Multi-agent system with specialized tools
 
-**Access**: 
-- API: http://localhost:8000
-- Streamlit UI: http://localhost:8501
+2. **Select Model**: Choose your Ollama model (RAG and Graph only)
 
-### Option 3: Haystack Pipeline
+3. **Start Chatting**: All services share the same conversation interface
 
-```powershell
-cd haystack
-uvicorn haystack_multi_agent_chatbot:app --reload
-```
+### API Endpoints
 
-**Access**: http://localhost:8000
-
-### Option 4: Graph-based Chatbot
-
-```powershell
-uvicorn graphchatbot:app --reload
-```
-
-**Access**: http://localhost:8000
+- **RAG Service**: `POST /rag/query`
+- **Graph Service**: `POST /graph/query`
+- **CrewAI Service**: `POST /crewai/query`
+- **Health Check**: `GET /health`
 
 ## 💡 Usage Examples
 
@@ -228,9 +216,9 @@ uvicorn graphchatbot:app --reload
 
 ### API Endpoints
 
-#### Main RAG API
+#### RAG Service
 ```bash
-POST /query
+POST /rag/query
 Content-Type: application/json
 
 {
@@ -239,24 +227,32 @@ Content-Type: application/json
 }
 ```
 
-#### CrewAI API
+#### Graph Service
 ```bash
-POST /crewquery
+POST /graph/query
 Content-Type: application/json
 
 {
-  "query": "Show occupancy trends for last month"
+  "question": "Show occupancy trends for last month",
+  "model": "llama3:8b"
 }
 ```
 
-#### Haystack API
+#### CrewAI Service
 ```bash
-POST /chat
+POST /crewai/query
 Content-Type: application/json
 
 {
   "query": "What is the highest occupancy floor?"
 }
+```
+
+#### Health Check
+```bash
+GET /health
+
+Response: {"status": "healthy", "service": "Unified Backend"}
 ```
 
 ## 📊 Data Schema
@@ -324,15 +320,6 @@ Content-Type: application/json
 - **Model Flexibility**: Easy switching between LLM models
 - **Conversation History**: Persistent chat sessions
 - **API Documentation**: Auto-generated FastAPI docs
-
-### ⚠️ Cons
-- **Resource Intensive**: Requires significant RAM for local LLMs
-- **Setup Complexity**: Multiple components to configure
-- **Model Dependencies**: Limited by available Ollama models
-- **Windows Focused**: Primarily tested on Windows PowerShell
-- **Data Dependency**: Requires structured occupancy data
-- **Neo4j Requirement**: Additional database setup needed
-- **Local Processing**: No cloud-based scaling options
 
 ## 📁 Project Structure
 
