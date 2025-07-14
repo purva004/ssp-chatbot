@@ -325,15 +325,6 @@ Content-Type: application/json
 - **Conversation History**: Persistent chat sessions
 - **API Documentation**: Auto-generated FastAPI docs
 
-### ⚠️ Cons
-- **Resource Intensive**: Requires significant RAM for local LLMs
-- **Setup Complexity**: Multiple components to configure
-- **Model Dependencies**: Limited by available Ollama models
-- **Windows Focused**: Primarily tested on Windows PowerShell
-- **Data Dependency**: Requires structured occupancy data
-- **Neo4j Requirement**: Additional database setup needed
-- **Local Processing**: No cloud-based scaling options
-
 ## 📁 Project Structure
 
 ```
