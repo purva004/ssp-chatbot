@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, createContext, useContext } from "react";
 import { useTheme } from "next-themes";
-import { askRAG } from "@/app/services/ragService";
+import { askAI, AIServiceType, AI_SERVICES } from "@/app/services/aiService";
 import { listOllamaModels } from "@/app/services/ollamaService";
 import { PlaceholdersAndVanishInput } from "@/components/ui/placeholders-and-vanish-input";
 import { TextGenerateEffect } from "@/components/ui/enhanced-text-generate-effect";
@@ -86,6 +86,7 @@ export default function Chat() {
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [model, setModel] = useState("");
+  const [service, setService] = useState<AIServiceType>("rag"); // Default to RAG service
   const [models, setModels] = useState<string[]>([]);
   const [input, setInput] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false); // Start with false to match SSR
@@ -219,7 +220,7 @@ export default function Chat() {
     const formData = new FormData(e.currentTarget);
     const inputElement = e.currentTarget.querySelector('input[type="text"]') as HTMLInputElement;
     const currentInput = (inputElement?.value || input).trim();
-    if (!currentInput || !model || loading) return;
+    if (!currentInput || loading) return;
 
     let conversationId = currentConversationId;
     
@@ -270,7 +271,7 @@ export default function Chat() {
     setLoading(true);
 
     try {
-      const response = await askRAG(currentInput, model);
+      const response = await askAI(currentInput, service, model);
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: response,
@@ -448,7 +449,7 @@ export default function Chat() {
                 </Button>
                 <OllamaChatIcon className="w-5 h-5 md:w-6 md:h-6 flex-shrink-0" size={24} />
                 <h1 className="text-base md:text-lg font-semibold truncate min-w-0">
-                  {currentConversation?.title || "Ollama Chat"}
+                  {currentConversation?.title || AI_SERVICES[service].displayName}
                 </h1>
               </div>
               <div className="flex items-center space-x-2 md:space-x-4 flex-shrink-0">
@@ -467,18 +468,32 @@ export default function Chat() {
                     <Moon className="w-4 h-4" />
                   )}
                 </Button>
-                <Select value={model} onValueChange={handleModelChange}>
+                <Select value={service} onValueChange={(value) => setService(value as AIServiceType)}>
                   <SelectTrigger className="w-32 md:w-48">
-                    <SelectValue placeholder="Model" />
+                    <SelectValue placeholder="AI Service" />
                   </SelectTrigger>
                   <SelectContent>
-                    {models.map((m) => (
-                      <SelectItem key={m} value={m}>
-                        <span className="truncate">{m}</span>
+                    {Object.entries(AI_SERVICES).map(([key, config]) => (
+                      <SelectItem key={key} value={key}>
+                        <span className="truncate">{config.displayName}</span>
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
+                {service !== 'crewai' && (
+                  <Select value={model} onValueChange={handleModelChange}>
+                    <SelectTrigger className="w-32 md:w-48">
+                      <SelectValue placeholder="Model" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {models.map((m) => (
+                        <SelectItem key={m} value={m}>
+                          <span className="truncate">{m}</span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
               </div>
             </div>
           </div>
@@ -491,9 +506,9 @@ export default function Chat() {
                   <OllamaChatIcon className="w-6 h-6 md:w-8 md:h-8 text-muted-foreground" size={32} />
                 </div>
                 <div className="space-y-2">
-                  <h2 className="text-lg md:text-xl font-semibold">Welcome to Ollama Chat</h2>
+                  <h2 className="text-lg md:text-xl font-semibold">Welcome to {AI_SERVICES[service].displayName}</h2>
                   <p className="text-sm md:text-base text-muted-foreground max-w-md">
-                    Start a conversation with your local AI model. Ask questions, get help, or just chat!
+                    {AI_SERVICES[service].description}. Start a conversation and ask questions!
                   </p>
                 </div>
               </div>
