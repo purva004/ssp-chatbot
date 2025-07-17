@@ -144,10 +144,10 @@ python start_chatbot.py
 ### Manual Start
 ```bash
 # Start FastAPI backend
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+uvicorn backend:app --host 0.0.0.0 --port 8000 --reload
 
-# Start Streamlit frontend (in another terminal)
-streamlit run frontend.py --server.port 8501
+# Start  frontend (in another terminal)
+  npm run dev
 ```
 
 ### API Testing
@@ -163,7 +163,7 @@ Invoke-WebRequest -Uri "http://127.0.0.1:8000/crewquery" -Method POST -Body $bod
 ## 🔍 Architecture Flow
 
 ```
-User Input (Streamlit/API)
+User Input (UI)
     ↓
 FastAPI Backend (main.py)
     ↓
@@ -177,7 +177,7 @@ Neo4j Database (neo4j_query_tool)
     ↓
 Result Formatting (format_response)
     ↓
-JSON Response → Frontend Display
+Response → Frontend Display
 ```
 
 ## ⚠️ Issue Resolution
