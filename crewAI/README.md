@@ -60,48 +60,37 @@ The Neo4j database contains `Occupancy` nodes with these properties:
    username = "neo4j"
    password = "purva@1234"
    ```
+### To check it on postman
+     
 
-## Usage
-
-### Quick Start
-```bash
-python start_chatbot.py
-```
-
-This will:
-- Check if Ollama and Neo4j are running
-- Start FastAPI backend on http://localhost:8000
-- Start Streamlit frontend on http://localhost:8501
 
 ### Manual Start
+    
+
 
 1. **Start FastAPI backend**:
    ```bash
-   uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+     uvicorn backend:app --host 0.0.0.0 --port 8000 --reload
+
    ```
 
 2. **Start Streamlit frontend**:
    ```bash
-   streamlit run frontend.py --server.port 8501
+     npm run dev
    ```
 
 ### API Usage
 
-**Endpoint**: `POST /crewquery`
+ ### Solution:
+ - You need to use the Postman Desktop App to test APIs running on your local machine.
 
-**Request**:
-```json
-{
-    "query": "What is the total WiFi count for Kalwa location?"
-}
-```
+### What to do:
 
-**Response**:
-```json
-{
-    "result": "Based on the data from the Kalwa location, the total WiFi count is 1,234 connections."
-}
-```
+ - Click the "Download Desktop Agent" or "Download Postman App" button shown in the error message.
+ - Install and open the Postman Desktop App.
+ - Run your Flask server as before (python crewai_agent.py).
+ - In the Desktop App, create the same POST request to http://localhost:5000/occupancy with your JSON body.
+ - Click Send—it will work!
 
 ## Example Queries
 
