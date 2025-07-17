@@ -8,24 +8,30 @@ C:\Users\z0050s8t\ssp-chatbot\crewAI\
 │   ├── main.py                     # FastAPI backend server
 │   ├── frontend.py                 # Streamlit web interface
 │   ├── simple_crewai_agent.py      # ✅ WORKING agent (bypasses LLM issues)
-│   ├── crewai_agent.py            # ❌ Original agent (has LLM issues)
+│   ├── crewai_agent.py            # ✅ WORKING agent (Ollama direct integration)
 │   └── start_chatbot.py           # Application startup script
 │
 ├── 📄 Database & Tools
 │   ├── neo4j_loader.py            # Neo4j data loading utilities
-│   ├── tool.py                    # Legacy Neo4j tool implementation
+│   ├── tool.py                    # Neo4j tool implementation
 │   └── occupancy_data.csv         # Raw occupancy data (58MB)
 │
-├── 📄 Legacy/Backup Files
-│   ├── custom_crew_agent.py       # Legacy custom implementation
-│   ├── custom_crew_runner.py      # Legacy custom runner
+├── 📄 Legacy/Alternative Files
+│   ├── custom_crew_agent.py       # Custom CrewAI implementation
+│   ├── custom_crew_runner.py      # Custom crew runner
 │   └── simple_query_processor.py  # Simple query processor
 │
+├── 📄 Testing Files
+│   ├── test_api.py                # API endpoint tests
+│   ├── test_fix.py                # Fix validation tests
+│   ├── test_full_query.py         # Full query integration tests
+│   ├── test_integration.py        # Integration tests
+│   └── test_neo4j.py              # Neo4j connection tests
+│
 ├── 📄 Configuration & Documentation
-│   ├── requirements.txt           # Python dependencies
+│   ├── requirements.txt           # Python dependencies (updated)
 │   ├── README.md                  # Project documentation
-│   ├── PROJECT_STRUCTURE.md       # This file
-│   └── test_integration.py        # Integration tests
+│   └── PROJECT_STRUCTURE.md       # This file
 │
 └── 📁 __pycache__/                # Python cache files
 ```
