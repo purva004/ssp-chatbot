@@ -2,6 +2,7 @@ from neo4j import GraphDatabase
 import os
 import requests
 import ast
+import json
 
 # Set environment variables for CrewAI
 os.environ["OPENAI_API_KEY"] = "not-needed"
@@ -75,6 +76,42 @@ def nl_to_cypher(nl_query: str) -> str:
     
     return cypher.strip()
 
+# Unified occupancy JSON output
+def get_occupancy_json(user_query: str) -> str:
+    """
+    Runs the user query and returns the occupancy result in unified JSON format:
+    { "occupancy": <number or null> }
+    """
+    # Step 1: Generate Cypher
+    if user_query.strip().lower().startswith("match"):
+        cypher_query = user_query
+    else:
+        cypher_query = nl_to_cypher(user_query)
+
+    # Step 2: Run Cypher
+    try:
+        result = neo4j_query_tool(cypher_query)
+    except Exception as e:
+        return json.dumps({"occupancy": None, "error": str(e)})
+
+    # Step 3: Extract occupancy value
+    try:
+        # Parse each line as dict, look for occupancy keys
+        result_lines = [line for line in result.split('\n') if line.strip()]
+        for line in result_lines:
+            data = ast.literal_eval(line)
+            # Try common keys
+            for key in ["total_wifi_count", "occupancy", "count", "sum"]:
+                if key in data:
+                    return json.dumps({"occupancy": data[key]})
+            # If only one value in dict, use it
+            if len(data) == 1:
+                return json.dumps({"occupancy": list(data.values())[0]})
+        # If nothing found, return null
+        return json.dumps({"occupancy": None})
+    except Exception:
+        return json.dumps({"occupancy": None, "raw_result": result})
+
 # Step 2 & 3: Run Cypher, then LLM explains result
 def run_crewai_query(user_query: str) -> str:
     print(f"[CrewAI Runner] Received query: {user_query}")
@@ -132,6 +169,8 @@ def generate_fallback_cypher(query: str) -> str:
             conditions.append("o.Floor = 'First Floor'")
         elif '2nd floor' in query_lower or 'second floor' in query_lower:
             conditions.append("o.Floor = 'Second Floor'")
+        elif '3rd floor' in query_lower or 'third floor' in query_lower:
+            conditions.append("o.Floor = 'Third Floor'")
         
         # Extract location
         if 'kalwa' in query_lower:
@@ -148,7 +187,13 @@ def generate_fallback_cypher(query: str) -> str:
             conditions.append("o.SiteDetails CONTAINS 'Innovation'")
         
         # Extract date
-        if '14th june 2025' in query_lower or '2025-06-14' in query_lower:
+        import re
+        date_match = re.search(r'(\d{1,2}/\d{1,2}/\d{4})', query_lower)
+        if date_match:
+            # Convert MM/DD/YYYY to YYYY-MM-DD
+            mm, dd, yyyy = date_match.group(1).split('/')
+            conditions.append(f"o.RecordDate = '{yyyy}-{int(mm):02d}-{int(dd):02d}'")
+        elif '14th june 2025' in query_lower or '2025-06-14' in query_lower:
             conditions.append("o.RecordDate = '2025-06-14'")
         
         where_clause = " AND ".join(conditions) if conditions else "1=1"
@@ -156,3 +201,25 @@ def generate_fallback_cypher(query: str) -> str:
     
     # Default fallback
     return "MATCH (o:Occupancy) RETURN o.Floor, o.LocationCode, o.WiFiCount, o.RecordDate LIMIT 5"
+
+# --- Flask API for Postman and UI ---
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route('/occupancy', methods=['POST'])
+def occupancy_api():
+    data = request.get_json()
+    user_query = data.get('query', '')
+    result_json = get_occupancy_json(user_query)
+    return result_json, 200, {'Content-Type': 'application/json'}
+
+@app.route('/chat', methods=['POST'])
+def chat_api():
+    data = request.get_json()
+    user_query = data.get('query', '')
+    answer = run_crewai_query(user_query)
+    return answer, 200, {'Content-Type': 'text/plain'}
+
+if __name__ == '__main__':
+    app.run(port=5000)
