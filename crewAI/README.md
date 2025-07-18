@@ -70,16 +70,17 @@ The Neo4j database contains `Occupancy` nodes with these properties:
 
 1. **Start FastAPI backend**:
    ```bash
-     uvicorn backend:app --host 0.0.0.0 --port 8000 --reload
+     uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
    ```
 
-2. **Start Streamlit frontend**:
+2. **Start  frontend**:
    ```bash
      npm run dev
    ```
 
 ### API Usage
+    - python crewai_agent.py
 
  ### Solution:
  - You need to use the Postman Desktop App to test APIs running on your local machine.
