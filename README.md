@@ -10,7 +10,7 @@ A unified multi-agent chatbot system that intelligently analyzes occupancy data 
 - **Three AI Architectures**: RAG (FAISS), Graph (Neo4j), and CrewAI Multi-Agent
 - **Seamless Service Switching**: Toggle between AI services from the same interface
 - **Real-time Chat Interface**: Modern Next.js frontend with TypeScript
-- **Multiple LLM Support**: Ollama integration with various models
+- **LLM Support**: Ollama integration with LLM models
 - **Smart Query Processing**: Intelligent date/time/location parsing
 - **Responsive Design**: Mobile-first UI with dark/light theme support
 - **Single Port Architecture**: All services unified on port 8000 with different endpoints
