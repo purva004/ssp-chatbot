@@ -235,7 +235,7 @@ Create `.env.local` file:
 NEXT_PUBLIC_DEFAULT_MODEL=llama3:8b
 NEO4J_URI=bolt://localhost:7687
 NEO4J_USERNAME=neo4j
-NEO4J_PASSWORD=purva@1234
+NEO4J_PASSWORD=The one you set during database creation
 OLLAMA_URL=http://localhost:11434
 ```
 
