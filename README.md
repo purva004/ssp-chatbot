@@ -121,21 +121,100 @@ ollama pull mistral:7b
 ollama serve
 ```
 
-### 3. Setup Neo4j Database
 
-1. **Download Neo4j Desktop**: https://neo4j.com/download/
-2. **Create Database**:
-   - Project name: SSP-Chatbot
-   - Database name: occupancy-db
-   - Password: purva@1234 (or update in configs)
-3. **Enable Vector Search**:
-   ```cypher
-   // Test connection
-   RETURN "Neo4j is ready!" AS message;
-   
-   // Create vector index (if needed)
-   CALL db.index.vector.createNodeIndex('embedding_index', 'LogEntry', 'embedding', 384);
+## 🔗 Neo4j Graph Database Integration
+
+This project uses **Neo4j** as a **vector-enabled graph database** to store and semantically search vector embeddings using **LangChain + Neo4j**.
+
+---
+
+### ✅ Step 1: Install Neo4j Desktop
+
+- Download Neo4j Desktop: [https://neo4j.com/download](https://neo4j.com/download)
+- Run the installer and complete installation.
+- Launch Neo4j Desktop and sign in using GitHub, Google, or email.
+
+---
+
+### ✅ Step 2: Create a New Project and Database
+
+1. Open Neo4j Desktop → Click **"New Project"** → Name it (e.g., `VectorBotProject`).
+2. Inside the project, click **"Add" → "Local DBMS"**.
+3. Set:
+   - **Name**: e.g., `vectorbot`
+   - **Password**: (choose your own)
+4. Click **Create**, then **Start** the database.
+
+---
+
+### ✅ Step 3: Enable Vector Search
+
+#### 🧩 Option A: Enable via GUI
+
+- Go to your running database → Click the **"Plugins"** tab.
+- Search for and install plugins like:
+  - **Vector**
+  - **Vector Indexes**
+  - **genAI**
+
+#### ⚠️ Option B: Manual Configuration (if plugin not available via GUI)
+
+1. Click **⋮ (three dots)** next to the database → **Manage** → **Settings**.
+2. Scroll to `neo4j.conf` and add the following:
+
+   ```ini
+   dbms.security.procedures.unrestricted=apoc.*,gds.*,vector.*
+   dbms.security.procedures.allowlist=apoc.*,gds.*,vector.*,genai.*
+   dbms.memory.heap.initial_size=2G
+   dbms.memory.heap.max_size=4G
    ```
+
+3. Save the changes and **restart the database**.
+
+---
+
+### ✅ Step 4: Get Connection Details
+
+- **URI**: `bolt://localhost:7687`
+- **Username**: `neo4j` (default)
+- **Password**: The one you set during database creation
+
+---
+
+### ✅ Step 5: Test the Setup
+
+Open the Neo4j Browser (from Neo4j Desktop) and run:
+
+```cypher
+RETURN "Neo4j is ready!" AS message;
+```
+
+If the vector plugin is enabled, test a vector index creation:
+
+```cypher
+CALL db.index.vector.createNodeIndex('myVectorIndex', 'MyLabel', 'myVectorProperty', 384);
+```
+
+---
+
+### ✅ Step 6: Connect from Python
+
+Use the official Neo4j Python driver:
+
+```python
+from neo4j import GraphDatabase
+
+uri = "bolt://localhost:7687"
+username = "neo4j"
+password = "your_password"
+
+driver = GraphDatabase.driver(uri, auth=(username, password))
+
+with driver.session() as session:
+    result = session.run("RETURN 'Neo4j connected!' AS msg")
+    print(result.single()["msg"])
+```
+
 
 ### 4. Frontend Setup
 
@@ -379,7 +458,7 @@ LOCAL_MODEL_PATH = "./all-MiniLM-L6-v2"
 # Neo4j settings
 NEO4J_URI = "bolt://localhost:7687"
 NEO4J_USERNAME = "neo4j"
-NEO4J_PASSWORD = "purva@1234"
+NEO4J_PASSWORD = "put your password here"  
 ```
 
 ### Frontend Configuration
@@ -489,11 +568,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👨‍💻 Author
 
-Developed by [Your Name]
-- GitHub: [Your GitHub Profile]
-- Email: [Your Email]
+Developed by Purva Patil
 
-## 🙏 Acknowledgments
+
+## Acknowledgments
 
 - **CrewAI**: For the multi-agent framework
 - **Haystack**: For the NLP pipeline architecture
@@ -504,15 +582,4 @@ Developed by [Your Name]
 
 ---
 
-## 📞 Support
-
-For support and questions:
-- Check the troubleshooting section above
-- Review the individual README files in subdirectories
-- Open an issue on GitHub
-- Check the FastAPI automatic documentation at `/docs`
-
----
-
-*Built with ❤️ using modern AI technologies*
 
