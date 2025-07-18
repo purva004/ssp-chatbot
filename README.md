@@ -1,6 +1,6 @@
 # SSP Chatbot - Unified Multi-Agent Intelligence System
 
-![SSP Chatbot](logobeautify.png)
+
 
 A unified multi-agent chatbot system that intelligently analyzes occupancy data through natural language queries. This project integrates three powerful AI architectures (RAG, Graph, and CrewAI) into a single seamless interface with Neo4j graph database and vector search capabilities.
 
