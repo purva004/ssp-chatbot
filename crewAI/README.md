@@ -58,7 +58,7 @@ The Neo4j database contains `Occupancy` nodes with these properties:
    ```python
    uri = "bolt://localhost:7687"
    username = "neo4j"
-   password = "purva@1234"
+   password = "your paasword"
    ```
 ### To check it on postman
      
