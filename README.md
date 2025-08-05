@@ -98,7 +98,7 @@ A unified multi-agent chatbot system that intelligently analyzes occupancy data 
 
 ```powershell
 # Clone the repository
-git clone 
+git clone https://github.com/purva004/ssp-chatbot.git
 
 # Create Python virtual environment
 python -m venv chatbot
